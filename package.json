@@ -1,5 +1,5 @@
 {
-  "name": "taberna-training-game",
+  "name": "candlcrew-training-game",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "wrangler pages dev",
     "deploy": "npm run build && wrangler pages deploy dist",
-    "deploy:prod": "npm run build && wrangler pages deploy dist --project-name taberna-training-game",
+    "deploy:prod": "npm run build && wrangler pages deploy dist --project-name candlcrew-training-game",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",
     "test": "curl http://localhost:3000",

@@ -1,6 +1,6 @@
-// Taberna Restaurant Training Game JavaScript
+// CandlCrew Restaurant Training Game JavaScript
 
-class TabernaTrainingGame {
+class CandlCrewTrainingGame {
   constructor() {
     this.currentMode = null
     this.sections = []
@@ -452,7 +452,7 @@ class TabernaTrainingGame {
         <div class="certificate-body">
           This certifies that you have successfully completed the<br>
           <strong>${this.currentSection.title}</strong><br>
-          training section at Taberna Restaurant
+          training section at CandlCrew Restaurant
         </div>
       </div>
     `)
@@ -531,7 +531,7 @@ function goHome() {
 // Initialize game when page loads
 let game
 document.addEventListener('DOMContentLoaded', () => {
-  game = new TabernaTrainingGame()
+  game = new CandlCrewTrainingGame()
   
   // Add event listeners
   document.getElementById('submit-answer').addEventListener('click', () => game.submitAnswer())

@@ -21,7 +21,7 @@ app.get('/', (c) => {
       <div class="hero-section">
         <h1 class="hero-title">
           <i class="fas fa-utensils"></i>
-          Taberna Restaurant Training Game
+          CandlCrew Restaurant Training Game
         </h1>
         <p class="hero-subtitle">Master our menu, ace your training!</p>
         <div class="game-modes">

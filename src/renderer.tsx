@@ -6,7 +6,7 @@ export const renderer = jsxRenderer(({ children }) => {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Taberna Restaurant Training Game</title>
+        <title>CandlCrew Restaurant Training Game</title>
         
         {/* TailwindCSS */}
         <script src="https://cdn.tailwindcss.com"></script>
@@ -24,7 +24,7 @@ export const renderer = jsxRenderer(({ children }) => {
               theme: {
                 extend: {
                   colors: {
-                    'taberna': {
+                    'candlcrew': {
                       50: '#fef7ee',
                       100: '#fdedd3',
                       200: '#fbd7a5',

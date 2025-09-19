@@ -1,4 +1,4 @@
-// Taberna Restaurant Training Quiz Data
+// CandlCrew Restaurant Training Quiz Data
 // Parsed from comprehensive staff training manual
 
 export interface Question {

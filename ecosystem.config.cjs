@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'taberna-training-game',
+      name: 'candlcrew-training-game',
       script: 'npx',
       args: 'wrangler pages dev dist --ip 0.0.0.0 --port 3000',
       env: {
