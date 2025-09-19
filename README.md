@@ -1,7 +1,7 @@
-# Taberna Restaurant Training Game
+# CandlCrew Restaurant Training Game
 
 ## Project Overview
-- **Name**: Taberna Restaurant Training Game
+- **Name**: CandlCrew Restaurant Training Game
 - **Goal**: Transform traditional restaurant training materials into an engaging, interactive game that helps new employees master the menu efficiently and enjoyably
 - **Features**: 
   - 11 comprehensive training sections covering all menu categories
@@ -13,8 +13,9 @@
 
 ## URLs
 - **Development**: https://3000-inxuy1kazvnc1g3dh1hff-6532622b.e2b.dev
-- **API Health Check**: https://3000-inxuy1kazvnc1g3dh1hff-6532622b.e2b.dev/api/sections
-- **GitHub**: *To be deployed*
+- **Production**: *Deploying to Vercel...*
+- **GitHub**: https://github.com/lelandsequel/candlcrew
+- **API Health Check**: `/api/sections`
 
 ## Data Architecture
 - **Data Models**: 
@@ -59,7 +60,7 @@
 
 ### ✅ UI/UX Features
 - Modern, responsive design using TailwindCSS
-- Portuguese restaurant-themed color scheme
+- CandlCrew-themed color scheme
 - FontAwesome icons for visual appeal
 - Smooth animations and transitions
 - Mobile-first responsive layout
@@ -71,11 +72,11 @@
 - `POST /api/progress` - Save training progress (stub implementation)
 
 ### ✅ Technical Features
-- Built with Hono framework for Cloudflare Pages/Workers
+- Built with Hono framework for edge deployment
 - TypeScript for type safety and better developer experience
 - Modular, maintainable code structure
-- PM2 process management for development
 - Vite build system for optimized production builds
+- Zero-configuration Vercel deployment
 
 ## User Guide
 
@@ -105,36 +106,56 @@
 - Overall certification: 70% minimum across all sections
 
 ## Deployment
-- **Platform**: Cloudflare Pages (development server running)
-- **Status**: ✅ Active and fully functional
+- **Platform**: Vercel (zero-configuration deployment)
+- **Status**: 🚀 Deploying to production...
 - **Tech Stack**: Hono + TypeScript + TailwindCSS + Vite
-- **Build**: Optimized for edge deployment
+- **Build**: Optimized for serverless edge functions
+- **GitHub Integration**: Automatic deployments from main branch
 - **Last Updated**: September 19, 2024
 
-## Development Notes
+## Development
 
-### Next Recommended Steps
+### Local Development
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Deploy to Vercel
+npm run deploy
+```
+
+### Project Structure
+```
+candlcrew-training-game/
+├── src/
+│   ├── index.tsx          # Main Hono application
+│   ├── renderer.tsx       # JSX renderer with layout
+│   └── data/
+│       └── quiz-data.ts   # All quiz questions and sections
+├── public/
+│   └── static/
+│       ├── style.css      # Custom CSS styles
+│       └── app.js         # Frontend JavaScript game logic
+├── package.json           # Dependencies and scripts
+├── tsconfig.json          # TypeScript configuration
+├── vite.config.ts         # Vite build configuration
+└── README.md              # This file
+```
+
+## Next Recommended Steps
 1. **Add user accounts** to save individual progress permanently
 2. **Implement analytics** to track which sections are most challenging
 3. **Add multiplayer features** for team competitions
 4. **Create admin dashboard** for trainers to monitor employee progress
 5. **Add more question types** like drag-and-drop or image-based questions
-6. **Deploy to production** Cloudflare Pages with custom domain
-7. **Add print certificates** functionality for physical records
-
-### Technical Improvements
-- Implement persistent storage using Cloudflare D1 database
-- Add email notifications for completed certifications
-- Create detailed analytics and reporting dashboard
-- Add offline mode support for areas with poor connectivity
-- Implement advanced scoring algorithms with difficulty weighting
-
-### Content Enhancements
-- Add audio pronunciations for Portuguese dish names
-- Include high-quality food images for visual learning
-- Create video explanations for complex preparation methods
-- Add customer service scenario simulations
-- Implement adaptive learning that adjusts difficulty based on performance
+6. **Add offline mode support** for areas with poor connectivity
+7. **Implement advanced scoring** algorithms with difficulty weighting
 
 ## Training Effectiveness
 This gamified approach transforms dry menu memorization into an engaging experience that:
@@ -145,4 +166,4 @@ This gamified approach transforms dry menu memorization into an engaging experie
 - **Creates competition** through scoring and achievements
 - **Ensures comprehensive coverage** of all menu sections
 
-The game successfully converts the original 17-page PDF training manual into an interactive experience that's both educational and enjoyable for restaurant staff.
+The game successfully converts traditional restaurant training materials into an interactive experience that's both educational and enjoyable for restaurant staff at CandlCrew.
