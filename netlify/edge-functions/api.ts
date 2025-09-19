@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { handle } from 'hono/netlify'
 import { cors } from 'hono/cors'
-import { quizData, gameConfig } from './quiz-data.ts'
+import { quizData, gameConfig } from '../../src/quiz-data.ts'
 
 const app = new Hono().basePath('/api')
 
