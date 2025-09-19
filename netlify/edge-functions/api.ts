@@ -1,65 +1,7 @@
 import { Hono } from 'hono'
 import { handle } from 'hono/netlify'
 import { cors } from 'hono/cors'
-
-// Quiz Data (simplified for demo - in production you'd import from a separate file)
-const quizData = [
-  {
-    id: 'bread-spreads',
-    title: 'Bread & Spreads',
-    description: 'Learn about our signature bread offerings and accompaniments',
-    passingScore: 80,
-    questions: [
-      {
-        id: 'bread-1',
-        type: 'multiple-choice',
-        question: 'What is included with the Daily Bread (V)?',
-        options: [
-          'Butter and jam',
-          'House-baked focaccia & sourdough with herbed olive oil',
-          'Garlic bread with marinara sauce',
-          'Pita bread with hummus'
-        ],
-        correctAnswer: 'House-baked focaccia & sourdough with herbed olive oil',
-        explanation: 'The Daily Bread is our signature vegetarian appetizer featuring fresh baked breads with herbed olive oil.',
-        difficulty: 'easy'
-      },
-      {
-        id: 'bread-2',
-        type: 'true-false',
-        question: 'Pão com Tomate can have jamón serrano added for an additional charge.',
-        correctAnswer: 'True',
-        explanation: 'Jamón serrano can be added for +$3.',
-        difficulty: 'medium'
-      }
-    ]
-  },
-  {
-    id: 'general',
-    title: 'General Restaurant Knowledge',
-    description: 'Important service standards and restaurant policies',
-    passingScore: 90,
-    questions: [
-      {
-        id: 'general-1',
-        type: 'multiple-choice',
-        question: 'What does the ★ symbol indicate on the menu?',
-        options: ['Chef\'s recommendation', 'Popular item', 'Items that may be served rare', 'Spicy dish'],
-        correctAnswer: 'Items that may be served rare',
-        explanation: 'Important for food safety and customer awareness.',
-        difficulty: 'medium'
-      }
-    ]
-  }
-]
-
-const gameConfig = {
-  timeLimit: 30,
-  minPassingScore: 70,
-  maxAttempts: 3,
-  pointsPerCorrect: 10,
-  bonusTimePoints: 5,
-}
+import { quizData, gameConfig } from './quiz-data.ts'
 
 const app = new Hono().basePath('/api')
 
@@ -94,7 +36,12 @@ app.post('/progress', (c) => {
 })
 
 app.get('/health', (c) => {
-  return c.json({ status: 'ok', timestamp: new Date().toISOString() })
+  return c.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    sections: quizData.length,
+    totalQuestions: quizData.reduce((acc, section) => acc + section.questions.length, 0)
+  })
 })
 
 export default handle(app)
