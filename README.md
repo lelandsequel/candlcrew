@@ -12,10 +12,10 @@
   - Mobile-responsive design with modern UI
 
 ## URLs
-- **Development**: https://3000-inxuy1kazvnc1g3dh1hff-6532622b.e2b.dev
-- **Production**: *Deploying to Vercel...*
+- **Production**: *Ready for Netlify deployment*
 - **GitHub**: https://github.com/lelandsequel/candlcrew
-- **API Health Check**: `/api/sections`
+- **API Health Check**: `/api/health`
+- **API Endpoints**: `/api/sections`, `/api/section/:id`
 
 ## Data Architecture
 - **Data Models**: 
@@ -106,12 +106,33 @@
 - Overall certification: 70% minimum across all sections
 
 ## Deployment
-- **Platform**: Vercel (zero-configuration deployment)
-- **Status**: 🚀 Deploying to production...
-- **Tech Stack**: Hono + TypeScript + TailwindCSS + Vite
-- **Build**: Optimized for serverless edge functions
+- **Platform**: Netlify Edge Functions
+- **Status**: ✅ Ready for deployment
+- **Tech Stack**: Hono + TypeScript + TailwindCSS + Netlify Edge Functions
+- **Build**: Optimized for edge runtime with zero-configuration
 - **GitHub Integration**: Automatic deployments from main branch
+- **Repository**: https://github.com/lelandsequel/candlcrew
 - **Last Updated**: September 19, 2024
+
+### Netlify Deployment Instructions
+1. **Connect Repository**: Link your GitHub account to Netlify
+2. **Import Project**: Select the `lelandsequel/candlcrew` repository
+3. **Deploy Settings**: Netlify auto-detects configuration from `netlify.toml`
+   - Build command: `echo "No build step needed"`
+   - Publish directory: `public`
+   - Edge functions: `netlify/edge-functions`
+4. **Deploy**: Click deploy - should work immediately!
+
+### Local Development
+```bash
+# Install dependencies
+npm install
+
+# Start Netlify dev server (includes edge functions)
+npm run dev
+
+# Visit http://localhost:8888
+```
 
 ## Development
 
