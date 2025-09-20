@@ -36,18 +36,18 @@ class CandlCrewTrainingGame {
     const container = document.getElementById('sections-container')
     
     container.innerHTML = this.sections.map(section => `
-      <div class="section-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="game.startSection('${section.id}')">
-        <h3 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
-          <i class="fas ${this.getSectionIcon(section.id)} mr-2 text-candlcrew-500"></i>
+      <div class="section-card" onclick="game.startSection('${section.id}')">
+        <h3>
+          <i class="fas ${this.getSectionIcon(section.id)}"></i>
           ${section.title}
         </h3>
-        <p class="text-gray-600 mb-4">${section.description}</p>
-        <div class="flex justify-between text-sm text-gray-500 mb-4">
-          <span><i class="fas fa-question-circle mr-1"></i> ${section.questions?.length || section.questionCount || 0} questions</span>
-          <span><i class="fas fa-target mr-1"></i> ${section.passingScore}% to pass</span>
+        <p>${section.description}</p>
+        <div class="flex">
+          <span><i class="fas fa-question-circle"></i> ${section.questions?.length || section.questionCount || 0} questions</span>
+          <span><i class="fas fa-target"></i> ${section.passingScore}% to pass</span>
         </div>
-        <button class="w-full bg-candlcrew-500 text-white py-2 px-4 rounded-lg hover:bg-candlcrew-600 transition-colors">
-          <i class="fas fa-play mr-2"></i>Start Training
+        <button>
+          <i class="fas fa-play"></i>Start Training
         </button>
       </div>
     `).join('')
@@ -127,19 +127,19 @@ class CandlCrewTrainingGame {
     const optionsContainer = document.getElementById('options-container')
     if (question.type === 'multiple-choice') {
       optionsContainer.innerHTML = question.options.map((option, index) => `
-        <label class="option-label block p-4 border border-gray-300 rounded-lg mb-2 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="answer" value="${option}" class="mr-3">
+        <label class="option-label">
+          <input type="radio" name="answer" value="${option}">
           <span>${option}</span>
         </label>
       `).join('')
     } else if (question.type === 'true-false') {
       optionsContainer.innerHTML = `
-        <label class="option-label block p-4 border border-gray-300 rounded-lg mb-2 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="answer" value="True" class="mr-3">
+        <label class="option-label">
+          <input type="radio" name="answer" value="True">
           <span>True</span>
         </label>
-        <label class="option-label block p-4 border border-gray-300 rounded-lg mb-2 cursor-pointer hover:bg-gray-50">
-          <input type="radio" name="answer" value="False" class="mr-3">
+        <label class="option-label">
+          <input type="radio" name="answer" value="False">
           <span>False</span>
         </label>
       `
@@ -170,14 +170,14 @@ class CandlCrewTrainingGame {
     // Show explanation
     const explanationDiv = document.getElementById('explanation')
     explanationDiv.innerHTML = `
-      <div class="p-4 rounded-lg ${isCorrect ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500'} border-l-4">
-        <div class="flex items-center mb-2">
-          <i class="fas ${isCorrect ? 'fa-check-circle text-green-600' : 'fa-times-circle text-red-600'} mr-2"></i>
-          <span class="font-semibold ${isCorrect ? 'text-green-800' : 'text-red-800'}">
+      <div class="explanation" style="border-left-color: ${isCorrect ? '#10b981' : '#ef4444'}; background-color: ${isCorrect ? '#f0fdf4' : '#fef2f2'};">
+        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+          <i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'}" style="color: ${isCorrect ? '#10b981' : '#ef4444'}; margin-right: 0.5rem;"></i>
+          <span style="font-weight: 600; color: ${isCorrect ? '#065f46' : '#991b1b'};">
             ${isCorrect ? 'Correct!' : 'Incorrect'}
           </span>
         </div>
-        ${question.explanation ? `<p class="text-gray-700">${question.explanation}</p>` : ''}
+        ${question.explanation ? `<p style="color: #374151;">${question.explanation}</p>` : ''}
       </div>
     `
     explanationDiv.classList.remove('hidden')
