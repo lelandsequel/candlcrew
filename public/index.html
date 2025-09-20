@@ -14,9 +14,6 @@
     <!-- Custom CSS -->
     <link href="/style.css" rel="stylesheet">
     
-    <!-- Axios for API calls -->
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
-    
     <!-- Tailwind Config -->
     <script>
         tailwind.config = {
@@ -43,114 +40,80 @@
 </head>
 <body class="bg-gray-50 font-sans">
     <div id="app">
-        <!-- Loading Screen -->
-        <div id="loading-screen" class="loading-screen">
-            <div class="loading-content">
-                <i class="fas fa-utensils loading-icon"></i>
-                <h2>CandlCrew Training Game</h2>
-                <p>Loading quiz sections...</p>
-                <div class="loading-spinner"></div>
-            </div>
-        </div>
-
-        <!-- Main Game Container -->
-        <div id="game-container" class="hidden">
-            <!-- Hero Section -->
-            <div class="hero-section">
-                <h1 class="hero-title">
-                    <i class="fas fa-utensils"></i>
-                    CandlCrew Restaurant Training Game
-                </h1>
-                <p class="hero-subtitle">Master our menu, ace your training!</p>
-            </div>
-
-            <!-- Quiz Sections -->
-            <div class="sections-wrapper">
-                <h2 class="sections-title">
-                    <i class="fas fa-list-check"></i>
-                    Choose Your Training Section
-                </h2>
-                <div id="sections-container" class="sections-grid">
-                    <!-- Sections will be loaded here by JavaScript -->
-                </div>
-            </div>
-
-            <!-- Quiz Container (hidden initially) -->
-            <div id="quiz-container" class="hidden quiz-container">
-                <div class="quiz-header">
-                    <button id="back-button" class="btn btn-secondary" onclick="game.showSections()">
-                        <i class="fas fa-arrow-left"></i> Back to Sections
-                    </button>
-                    <div class="quiz-progress">
-                        <span id="question-counter">Question 1 of 5</span>
-                        <div class="progress-bar">
-                            <div id="progress-fill" class="progress-fill"></div>
-                        </div>
-                    </div>
-                    <div class="quiz-score">
-                        Score: <span id="current-score">0</span>%
-                    </div>
-                </div>
-
-                <div class="quiz-content">
-                    <div class="question-card">
-                        <h3 id="question-title" class="question-title"></h3>
-                        <div id="question-content" class="question-content"></div>
-                        <div id="options-container" class="options-container"></div>
-                        <div id="explanation" class="explanation hidden"></div>
-                        
-                        <div class="quiz-actions">
-                            <button id="submit-button" class="btn btn-primary" onclick="game.submitAnswer()">
-                                <i class="fas fa-check"></i> Submit Answer
-                            </button>
-                            <button id="next-button" class="btn btn-primary hidden" onclick="game.nextQuestion()">
-                                <i class="fas fa-arrow-right"></i> Next Question
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Results Container -->
-            <div id="results-container" class="hidden results-container">
-                <div class="results-card">
-                    <div class="results-header">
-                        <i id="results-icon" class="fas fa-trophy results-icon"></i>
-                        <h2 id="results-title" class="results-title">Quiz Complete!</h2>
-                    </div>
-                    <div class="results-content">
-                        <div class="score-display">
-                            <span id="final-score" class="final-score">85%</span>
-                            <span class="score-label">Final Score</span>
-                        </div>
-                        <div id="results-message" class="results-message"></div>
-                        <div class="results-actions">
-                            <button class="btn btn-primary" onclick="game.showSections()">
-                                <i class="fas fa-list"></i> Back to Sections
-                            </button>
-                            <button class="btn btn-secondary" onclick="game.retrySection()">
-                                <i class="fas fa-redo"></i> Retry Section
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Error Container -->
-        <div id="error-container" class="hidden error-container">
-            <div class="error-card">
-                <i class="fas fa-exclamation-triangle error-icon"></i>
-                <h2>Connection Error</h2>
-                <p id="error-message">Unable to load quiz data. Please check your connection and try again.</p>
-                <button class="btn btn-primary" onclick="location.reload()">
-                    <i class="fas fa-refresh"></i> Retry
+        <div class="hero-section">
+            <h1 class="hero-title">
+                <i class="fas fa-utensils"></i>
+                CandlCrew Restaurant Training Game
+            </h1>
+            <p class="hero-subtitle">Master our menu, ace your training!</p>
+            <div class="game-modes">
+                <button class="btn btn-primary" onclick="startGame('practice')">
+                    <i class="fas fa-play"></i>
+                    Practice Mode
                 </button>
+                <button class="btn btn-secondary" onclick="startGame('timed')">
+                    <i class="fas fa-clock"></i>
+                    Timed Challenge
+                </button>
+                <button class="btn btn-success" onclick="startGame('certification')">
+                    <i class="fas fa-certificate"></i>
+                    Certification Test
+                </button>
+            </div>
+        </div>
+
+        <div class="sections-grid">
+            <h2>Training Sections</h2>
+            <div id="sections-container" class="sections"></div>
+        </div>
+
+        <div id="game-container" class="game-container hidden">
+            <div class="game-header">
+                <div class="progress-info">
+                    <span id="current-section">Section</span>
+                    <span id="question-counter">1/5</span>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="game-stats">
+                    <div class="stat">
+                        <span>Score: </span><span id="current-score">0</span>
+                    </div>
+                    <div class="stat">
+                        <span>Time: </span><span id="timer">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div id="question-content"></div>
+                <div id="answer-options" class="answer-options"></div>
+                <div class="question-actions">
+                    <button id="submit-answer" class="btn btn-primary" disabled>Submit Answer</button>
+                    <button id="next-question" class="btn btn-secondary hidden">Next Question</button>
+                </div>
+            </div>
+
+            <div id="feedback" class="feedback hidden"></div>
+        </div>
+
+        <div id="results-container" class="results-container hidden">
+            <div class="results-content">
+                <h2 id="results-title">Quiz Complete!</h2>
+                <div id="results-stats"></div>
+                <div class="results-actions">
+                    <button class="btn btn-primary" onclick="resetGame()">Try Again</button>
+                    <button class="btn btn-secondary" onclick="goHome()">Home</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Game Script -->
-    <script src="simple-app.js"></script>
+    <!-- Axios for API calls -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="/app.js"></script>
 </body>
 </html>

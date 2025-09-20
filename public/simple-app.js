@@ -1,4 +1,4 @@
-// CandlCrew Restaurant Training Game - SIMPLE WORKING VERSION
+// CandlCrew Restaurant Training Game JavaScript
 
 class CandlCrewTrainingGame {
   constructor() {
@@ -7,6 +7,9 @@ class CandlCrewTrainingGame {
     this.currentSection = null
     this.currentQuestionIndex = 0
     this.score = 0
+    this.timeRemaining = 0
+    this.timer = null
+    this.gameConfig = {}
     this.answers = []
     this.startTime = null
     
@@ -15,21 +18,14 @@ class CandlCrewTrainingGame {
 
   async initGame() {
     try {
-      console.log('Loading sections...')
       const response = await axios.get('/api/sections')
-      this.sections = response.data.sections.slice(0, 11) // Only original 11 sections
-      console.log('Loaded sections:', this.sections.length)
-      this.hideLoading()
+      this.sections = response.data.sections
+      this.gameConfig = response.data.gameConfig
       this.renderSections()
     } catch (error) {
       console.error('Failed to load quiz data:', error)
       this.showError('Failed to load quiz data. Please refresh the page.')
     }
-  }
-
-  hideLoading() {
-    document.getElementById('loading-screen').classList.add('hidden')
-    document.getElementById('game-container').classList.remove('hidden')
   }
 
   renderSections() {
@@ -42,13 +38,19 @@ class CandlCrewTrainingGame {
           ${section.title}
         </h3>
         <p>${section.description}</p>
-        <div class="flex">
-          <span><i class="fas fa-question-circle"></i> ${section.questions?.length || section.questionCount || 0} questions</span>
+        <div class="section-meta">
+          <span><i class="fas fa-question-circle"></i> ${section.questionCount} questions</span>
           <span><i class="fas fa-target"></i> ${section.passingScore}% to pass</span>
         </div>
-        <button>
-          <i class="fas fa-play"></i>Start Training
-        </button>
+        <div class="section-progress">
+          <div class="section-progress-fill" style="width: ${this.getSectionProgress(section.id)}%"></div>
+        </div>
+        <div class="mt-4">
+          <button class="btn btn-primary" onclick="event.stopPropagation(); game.startSection('${section.id}')">
+            <i class="fas fa-play"></i>
+            Start Section
+          </button>
+        </div>
       </div>
     `).join('')
   }
@@ -56,10 +58,10 @@ class CandlCrewTrainingGame {
   getSectionIcon(sectionId) {
     const icons = {
       'bread-spreads': 'fa-bread-slice',
-      'petiscos': 'fa-utensils', 
+      'petiscos': 'fa-pepper-hot',
       'sandwiches': 'fa-hamburger',
       'salads': 'fa-leaf',
-      'soups': 'fa-bowl-hot',
+      'soups': 'fa-bowl-food',
       'pizza': 'fa-pizza-slice',
       'vegetarian': 'fa-seedling',
       'meat': 'fa-drumstick-bite',
@@ -67,11 +69,31 @@ class CandlCrewTrainingGame {
       'large-format': 'fa-users',
       'general': 'fa-clipboard-list'
     }
-    return icons[sectionId] || 'fa-book'
+    return icons[sectionId] || 'fa-utensils'
+  }
+
+  getSectionProgress(sectionId) {
+    // In a real app, this would come from saved progress
+    return Math.floor(Math.random() * 100)
+  }
+
+  startGame(mode) {
+    this.currentMode = mode
+    document.querySelector('.hero-section').style.display = 'none'
+    document.querySelector('.sections-grid').style.display = 'block'
+    
+    // Update instructions based on mode
+    const instructions = {
+      practice: 'Choose a section to practice. Take your time and learn!',
+      timed: 'Each question has a time limit. Answer quickly for bonus points!',
+      certification: 'Complete all sections with 80%+ to earn your certificate!'
+    }
+    
+    document.querySelector('.sections-grid h2').textContent = 
+      `${mode.charAt(0).toUpperCase() + mode.slice(1)} Mode - ${instructions[mode]}`
   }
 
   async startSection(sectionId) {
-    console.log('Starting section:', sectionId)
     try {
       const response = await axios.get(`/api/section/${sectionId}`)
       this.currentSection = response.data
@@ -80,165 +102,438 @@ class CandlCrewTrainingGame {
       this.answers = []
       this.startTime = Date.now()
       
-      this.showQuiz()
+      this.showGameContainer()
       this.renderQuestion()
+      
+      if (this.currentMode === 'timed') {
+        this.startTimer()
+      }
     } catch (error) {
       console.error('Failed to load section:', error)
-      alert('Failed to load quiz section. Please try again.')
+      this.showError('Failed to load section. Please try again.')
     }
   }
 
-  showSections() {
-    document.getElementById('quiz-container').classList.add('hidden')
-    document.getElementById('results-container').classList.add('hidden')
-    document.getElementById('sections-container').parentElement.classList.remove('hidden')
-  }
-
-  showQuiz() {
-    document.getElementById('sections-container').parentElement.classList.add('hidden')
-    document.getElementById('quiz-container').classList.remove('hidden')
-    document.getElementById('results-container').classList.add('hidden')
+  showGameContainer() {
+    document.querySelector('.sections-grid').style.display = 'none'
+    document.getElementById('game-container').classList.remove('hidden')
+    
+    // Update header info
+    document.getElementById('current-section').textContent = this.currentSection.title
+    document.getElementById('current-score').textContent = this.score
+    this.updateProgress()
   }
 
   renderQuestion() {
-    if (!this.currentSection || !this.currentSection.questions) return
-    
     const question = this.currentSection.questions[this.currentQuestionIndex]
-    if (!question) return
-
-    // Update progress
+    const questionContent = document.getElementById('question-content')
+    const answerOptions = document.getElementById('answer-options')
+    
+    // Update question counter
     document.getElementById('question-counter').textContent = 
-      `Question ${this.currentQuestionIndex + 1} of ${this.currentSection.questions.length}`
+      `${this.currentQuestionIndex + 1}/${this.currentSection.questions.length}`
     
-    const progressPercent = ((this.currentQuestionIndex + 1) / this.currentSection.questions.length) * 100
-    document.getElementById('progress-fill').style.width = `${progressPercent}%`
-    
-    // Update score
-    const currentScore = this.answers.length > 0 ? 
-      Math.round((this.answers.filter(a => a.correct).length / this.answers.length) * 100) : 0
-    document.getElementById('current-score').textContent = currentScore
-
-    // Render question
-    document.getElementById('question-title').textContent = question.question
-    document.getElementById('question-content').innerHTML = question.imageUrl ? 
-      `<img src="${question.imageUrl}" alt="Question image" class="max-w-full h-auto rounded-lg mb-4">` : ''
-    
-    // Render options
-    const optionsContainer = document.getElementById('options-container')
-    if (question.type === 'multiple-choice') {
-      optionsContainer.innerHTML = question.options.map((option, index) => `
-        <label class="option-label">
-          <input type="radio" name="answer" value="${option}">
-          <span>${option}</span>
-        </label>
-      `).join('')
-    } else if (question.type === 'true-false') {
-      optionsContainer.innerHTML = `
-        <label class="option-label">
-          <input type="radio" name="answer" value="True">
-          <span>True</span>
-        </label>
-        <label class="option-label">
-          <input type="radio" name="answer" value="False">
-          <span>False</span>
-        </label>
-      `
+    // Render question based on type
+    switch (question.type) {
+      case 'multiple-choice':
+        this.renderMultipleChoice(question, questionContent, answerOptions)
+        break
+      case 'true-false':
+        this.renderTrueFalse(question, questionContent, answerOptions)
+        break
+      case 'fill-blank':
+        this.renderFillBlank(question, questionContent, answerOptions)
+        break
+      case 'scenario':
+        this.renderScenario(question, questionContent, answerOptions)
+        break
     }
-
+    
     // Reset buttons
-    document.getElementById('submit-button').classList.remove('hidden')
-    document.getElementById('next-button').classList.add('hidden')
-    document.getElementById('explanation').classList.add('hidden')
+    document.getElementById('submit-answer').disabled = true
+    document.getElementById('submit-answer').classList.remove('hidden')
+    document.getElementById('next-question').classList.add('hidden')
+    document.getElementById('feedback').classList.add('hidden')
+  }
+
+  renderMultipleChoice(question, questionContent, answerOptions) {
+    questionContent.innerHTML = `
+      <h3>${question.question}</h3>
+    `
+    
+    answerOptions.innerHTML = question.options.map((option, index) => `
+      <div class="answer-option" onclick="game.selectOption(${index})">
+        <span class="option-letter">${String.fromCharCode(65 + index)}</span>
+        <span>${option}</span>
+      </div>
+    `).join('')
+  }
+
+  renderTrueFalse(question, questionContent, answerOptions) {
+    questionContent.innerHTML = `
+      <h3>${question.question}</h3>
+    `
+    
+    answerOptions.innerHTML = `
+      <div class="answer-option" onclick="game.selectOption(0)">
+        <span class="option-letter">T</span>
+        <span>True</span>
+      </div>
+      <div class="answer-option" onclick="game.selectOption(1)">
+        <span class="option-letter">F</span>
+        <span>False</span>
+      </div>
+    `
+  }
+
+  renderFillBlank(question, questionContent, answerOptions) {
+    const blanks = Array.isArray(question.correctAnswer) ? question.correctAnswer : [question.correctAnswer]
+    let questionText = question.question
+    
+    // Replace blanks with input fields
+    blanks.forEach((_, index) => {
+      questionText = questionText.replace('_______', 
+        `<input type="text" class="blank-input" id="blank-${index}" onchange="game.checkBlanks()">`
+      )
+    })
+    
+    questionContent.innerHTML = `<h3>${questionText}</h3>`
+    answerOptions.innerHTML = ''
+  }
+
+  renderScenario(question, questionContent, answerOptions) {
+    questionContent.innerHTML = `
+      <h3>${question.question}</h3>
+      <p class="text-sm text-gray-600 mt-2">Provide a detailed answer in the text area below.</p>
+    `
+    
+    answerOptions.innerHTML = `
+      <textarea 
+        id="scenario-answer" 
+        class="w-full p-4 border-2 border-gray-300 rounded-lg"
+        rows="4" 
+        placeholder="Enter your answer here..."
+        onchange="game.checkScenario()"
+      ></textarea>
+    `
+  }
+
+  selectOption(index) {
+    // Clear previous selections
+    document.querySelectorAll('.answer-option').forEach(option => {
+      option.classList.remove('selected')
+    })
+    
+    // Select current option
+    document.querySelectorAll('.answer-option')[index].classList.add('selected')
+    this.selectedAnswer = index
+    document.getElementById('submit-answer').disabled = false
+  }
+
+  checkBlanks() {
+    const question = this.currentSection.questions[this.currentQuestionIndex]
+    const blanks = Array.isArray(question.correctAnswer) ? question.correctAnswer : [question.correctAnswer]
+    
+    let allFilled = true
+    for (let i = 0; i < blanks.length; i++) {
+      const input = document.getElementById(`blank-${i}`)
+      if (!input || !input.value.trim()) {
+        allFilled = false
+        break
+      }
+    }
+    
+    document.getElementById('submit-answer').disabled = !allFilled
+  }
+
+  checkScenario() {
+    const textarea = document.getElementById('scenario-answer')
+    document.getElementById('submit-answer').disabled = !textarea.value.trim()
   }
 
   submitAnswer() {
-    const selectedAnswer = document.querySelector('input[name="answer"]:checked')
-    if (!selectedAnswer) {
-      alert('Please select an answer before submitting.')
-      return
-    }
-
     const question = this.currentSection.questions[this.currentQuestionIndex]
-    const isCorrect = selectedAnswer.value === question.correctAnswer
-
+    let userAnswer = null
+    let isCorrect = false
+    
+    // Get user answer based on question type
+    switch (question.type) {
+      case 'multiple-choice':
+        userAnswer = question.options[this.selectedAnswer]
+        isCorrect = userAnswer === question.correctAnswer
+        break
+        
+      case 'true-false':
+        userAnswer = this.selectedAnswer === 0 ? 'True' : 'False'
+        isCorrect = userAnswer === question.correctAnswer
+        break
+        
+      case 'fill-blank':
+        const blanks = Array.isArray(question.correctAnswer) ? question.correctAnswer : [question.correctAnswer]
+        userAnswer = []
+        isCorrect = true
+        
+        for (let i = 0; i < blanks.length; i++) {
+          const input = document.getElementById(`blank-${i}`)
+          const value = input.value.trim().toLowerCase()
+          userAnswer.push(value)
+          
+          if (value !== blanks[i].toLowerCase()) {
+            isCorrect = false
+          }
+        }
+        break
+        
+      case 'scenario':
+        userAnswer = document.getElementById('scenario-answer').value.trim()
+        // For scenarios, we'll consider any non-empty answer as correct for now
+        // In a real app, this could use AI to grade or require manual review
+        isCorrect = userAnswer.length > 20 // Require at least 20 characters
+        break
+    }
+    
+    // Record answer
     this.answers.push({
       questionId: question.id,
-      answer: selectedAnswer.value,
-      correct: isCorrect
+      userAnswer,
+      correctAnswer: question.correctAnswer,
+      isCorrect,
+      timeSpent: this.currentMode === 'timed' ? this.gameConfig.timeLimit - this.timeRemaining : null
     })
+    
+    // Update score
+    if (isCorrect) {
+      let points = this.gameConfig.pointsPerCorrect
+      if (this.currentMode === 'timed' && this.timeRemaining > this.gameConfig.timeLimit / 2) {
+        points += this.gameConfig.bonusTimePoints
+      }
+      this.score += points
+      document.getElementById('current-score').textContent = this.score
+    }
+    
+    // Show feedback
+    this.showFeedback(isCorrect, question)
+    
+    // Hide submit button, show next button
+    document.getElementById('submit-answer').classList.add('hidden')
+    document.getElementById('next-question').classList.remove('hidden')
+    
+    // Stop timer for this question
+    if (this.timer) {
+      clearInterval(this.timer)
+    }
+  }
 
-    // Show explanation
-    const explanationDiv = document.getElementById('explanation')
-    explanationDiv.innerHTML = `
-      <div class="explanation" style="border-left-color: ${isCorrect ? '#10b981' : '#ef4444'}; background-color: ${isCorrect ? '#f0fdf4' : '#fef2f2'};">
-        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
-          <i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'}" style="color: ${isCorrect ? '#10b981' : '#ef4444'}; margin-right: 0.5rem;"></i>
-          <span style="font-weight: 600; color: ${isCorrect ? '#065f46' : '#991b1b'};">
-            ${isCorrect ? 'Correct!' : 'Incorrect'}
-          </span>
-        </div>
-        ${question.explanation ? `<p style="color: #374151;">${question.explanation}</p>` : ''}
-      </div>
+  showFeedback(isCorrect, question) {
+    const feedback = document.getElementById('feedback')
+    feedback.classList.remove('hidden', 'correct', 'incorrect')
+    feedback.classList.add(isCorrect ? 'correct' : 'incorrect')
+    
+    let feedbackHTML = `
+      <h4>
+        <i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+        ${isCorrect ? 'Correct!' : 'Incorrect'}
+      </h4>
     `
-    explanationDiv.classList.remove('hidden')
-
-    // Update buttons
-    document.getElementById('submit-button').classList.add('hidden')
-    document.getElementById('next-button').classList.remove('hidden')
+    
+    if (!isCorrect) {
+      if (question.type === 'multiple-choice' || question.type === 'true-false') {
+        feedbackHTML += `<p><strong>Correct answer:</strong> ${question.correctAnswer}</p>`
+      } else if (question.type === 'fill-blank') {
+        const blanks = Array.isArray(question.correctAnswer) ? question.correctAnswer : [question.correctAnswer]
+        feedbackHTML += `<p><strong>Correct answer:</strong> ${blanks.join(', ')}</p>`
+      }
+    }
+    
+    if (question.explanation) {
+      feedbackHTML += `<p>${question.explanation}</p>`
+    }
+    
+    feedback.innerHTML = feedbackHTML
+    
+    // Highlight correct/incorrect options for multiple choice
+    if (question.type === 'multiple-choice' || question.type === 'true-false') {
+      const options = document.querySelectorAll('.answer-option')
+      options.forEach((option, index) => {
+        const text = option.querySelector('span:last-child').textContent
+        if (text === question.correctAnswer) {
+          option.classList.add('correct')
+        } else if (index === this.selectedAnswer && !isCorrect) {
+          option.classList.add('incorrect')
+        }
+      })
+    }
   }
 
   nextQuestion() {
     this.currentQuestionIndex++
     
-    if (this.currentQuestionIndex >= this.currentSection.questions.length) {
-      this.showResults()
+    if (this.currentQuestionIndex < this.currentSection.questions.length) {
+      this.renderQuestion()
+      this.updateProgress()
+      
+      if (this.currentMode === 'timed') {
+        this.startTimer()
+      }
     } else {
-      this.renderQuestion()
+      this.finishSection()
     }
   }
 
-  showResults() {
-    const correctAnswers = this.answers.filter(a => a.correct).length
-    const totalQuestions = this.answers.length
-    const finalScore = Math.round((correctAnswers / totalQuestions) * 100)
-    const passed = finalScore >= this.currentSection.passingScore
+  startTimer() {
+    this.timeRemaining = this.gameConfig.timeLimit
+    document.getElementById('timer').textContent = this.timeRemaining
+    
+    this.timer = setInterval(() => {
+      this.timeRemaining--
+      document.getElementById('timer').textContent = this.timeRemaining
+      
+      if (this.timeRemaining <= 5) {
+        document.getElementById('timer').classList.add('warning')
+      }
+      
+      if (this.timeRemaining <= 0) {
+        clearInterval(this.timer)
+        this.submitAnswer() // Auto-submit when time runs out
+      }
+    }, 1000)
+  }
 
-    document.getElementById('quiz-container').classList.add('hidden')
+  updateProgress() {
+    const progress = ((this.currentQuestionIndex + 1) / this.currentSection.questions.length) * 100
+    document.getElementById('progress-fill').style.width = `${progress}%`
+  }
+
+  finishSection() {
+    const totalQuestions = this.currentSection.questions.length
+    const correctAnswers = this.answers.filter(a => a.isCorrect).length
+    const percentage = Math.round((correctAnswers / totalQuestions) * 100)
+    const passed = percentage >= this.currentSection.passingScore
+    const totalTime = Math.round((Date.now() - this.startTime) / 1000)
+    
+    document.getElementById('game-container').classList.add('hidden')
     document.getElementById('results-container').classList.remove('hidden')
-
-    // Update results display
-    document.getElementById('final-score').textContent = `${finalScore}%`
-    document.getElementById('results-title').textContent = passed ? 'Great Job!' : 'Keep Learning!'
-    document.getElementById('results-icon').className = `fas ${passed ? 'fa-trophy' : 'fa-medal'} results-icon`
     
-    const message = passed ? 
-      `Congratulations! You passed the ${this.currentSection.title} training with ${correctAnswers}/${totalQuestions} correct answers.` :
-      `You scored ${correctAnswers}/${totalQuestions} correct. You need ${this.currentSection.passingScore}% to pass. Keep studying and try again!`
+    // Update results
+    document.getElementById('results-title').textContent = 
+      passed ? '🎉 Congratulations!' : '📚 Keep Studying!'
     
-    document.getElementById('results-message').textContent = message
+    document.getElementById('results-stats').innerHTML = `
+      <div class="result-stat">
+        <span class="result-stat-value">${percentage}%</span>
+        <div class="result-stat-label">Final Score</div>
+      </div>
+      <div class="result-stat">
+        <span class="result-stat-value">${correctAnswers}/${totalQuestions}</span>
+        <div class="result-stat-label">Questions Correct</div>
+      </div>
+      <div class="result-stat">
+        <span class="result-stat-value">${this.score}</span>
+        <div class="result-stat-label">Points Earned</div>
+      </div>
+      <div class="result-stat">
+        <span class="result-stat-value">${totalTime}s</span>
+        <div class="result-stat-label">Time Taken</div>
+      </div>
+    `
+    
+    if (passed && this.currentMode === 'certification') {
+      this.showCertificate()
+    }
   }
 
-  retrySection() {
-    if (this.currentSection) {
-      this.currentQuestionIndex = 0
-      this.score = 0
-      this.answers = []
-      this.startTime = Date.now()
-      this.showQuiz()
-      this.renderQuestion()
+  showCertificate() {
+    document.getElementById('results-stats').insertAdjacentHTML('beforeend', `
+      <div class="certificate mt-4">
+        <div class="certificate-title">
+          <i class="fas fa-certificate"></i>
+          Certificate of Completion
+        </div>
+        <div class="certificate-body">
+          This certifies that you have successfully completed the<br>
+          <strong>${this.currentSection.title}</strong><br>
+          training section at CandlCrew Restaurant
+        </div>
+      </div>
+    `)
+    
+    // Add confetti effect
+    this.addConfetti()
+  }
+
+  addConfetti() {
+    for (let i = 0; i < 50; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement('div')
+        confetti.className = 'confetti'
+        confetti.style.left = Math.random() * 100 + 'vw'
+        confetti.style.animationDelay = Math.random() * 3 + 's'
+        confetti.style.backgroundColor = ['#f1770a', '#4299e1', '#38a169', '#6b46c1'][Math.floor(Math.random() * 4)]
+        document.body.appendChild(confetti)
+        
+        setTimeout(() => confetti.remove(), 3000)
+      }, i * 50)
     }
+  }
+
+  resetGame() {
+    document.getElementById('results-container').classList.add('hidden')
+    document.querySelector('.hero-section').style.display = 'block'
+    document.querySelector('.sections-grid').style.display = 'none'
+    
+    // Reset game state
+    this.currentMode = null
+    this.currentSection = null
+    this.currentQuestionIndex = 0
+    this.score = 0
+    this.answers = []
+    
+    if (this.timer) {
+      clearInterval(this.timer)
+    }
+  }
+
+  goHome() {
+    this.resetGame()
   }
 
   showError(message) {
-    document.getElementById('loading-screen').classList.add('hidden')
-    document.getElementById('game-container').classList.add('hidden')
-    document.getElementById('error-container').classList.remove('hidden')
-    document.getElementById('error-message').textContent = message
+    const errorDiv = document.createElement('div')
+    errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50'
+    errorDiv.innerHTML = `
+      <div class="flex items-center gap-2">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>${message}</span>
+        <button onclick="this.parentElement.parentElement.remove()" class="ml-2">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    `
+    document.body.appendChild(errorDiv)
+    
+    setTimeout(() => errorDiv.remove(), 5000)
   }
 }
 
+// Global functions for HTML onclick events
+function startGame(mode) {
+  game.startGame(mode)
+}
+
+function resetGame() {
+  game.resetGame()
+}
+
+function goHome() {
+  game.goHome()
+}
+
 // Initialize game when page loads
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('Initializing CandlCrew Training Game...')
-  window.game = new CandlCrewTrainingGame()
+let game
+document.addEventListener('DOMContentLoaded', () => {
+  game = new CandlCrewTrainingGame()
+  
+  // Add event listeners
+  document.getElementById('submit-answer').addEventListener('click', () => game.submitAnswer())
+  document.getElementById('next-question').addEventListener('click', () => game.nextQuestion())
 })
