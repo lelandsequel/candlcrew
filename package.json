@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "netlify dev",
-    "build": "echo 'No build step needed'",
+    "build": "cp -r public dist",
     "deploy": "netlify deploy --prod",
     "test": "curl http://localhost:8888",
     "git:commit": "git add . && git commit -m",

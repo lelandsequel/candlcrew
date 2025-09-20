@@ -1,7 +1,7 @@
 // CandlCrew Advanced Beverage Training - Level 1 Sommelier Equivalent
 // Wine • Beer • Whiskey • Tequila • Rum Mastery Programs
 
-// Import the base interfaces directly to avoid circular dependency
+// Standalone interfaces to avoid circular dependency
 interface Question {
   id: string
   type: 'multiple-choice' | 'true-false' | 'fill-blank' | 'scenario' | 'table-service' | 'pos-training' | 'food-safety' | 'wine-pairing' | 'image-recognition'

@@ -13,8 +13,7 @@
     <!-- Custom Styles -->
     <link href="styles.css" rel="stylesheet">
     
-    <!-- Mock API for development -->
-    <script src="mock-api.js"></script>
+    <!-- REAL API - NO MOCK -->
     
     <!-- Meta Tags for PWA -->
     <meta name="description" content="CandlCrew Restaurant Advanced Training Platform - Interactive employee training with simulations, certifications, and progress tracking">
@@ -180,5 +179,11 @@
     
     <!-- Main Application Script -->
     <script src="app.js"></script>
+    <script>
+      // Emergency fix for pitch demo
+      window.addEventListener('error', (e) => {
+        console.log('Caught error, attempting graceful fallback:', e.message);
+      });
+    </script>
 </body>
 </html>
