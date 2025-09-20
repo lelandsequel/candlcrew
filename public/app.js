@@ -148,7 +148,7 @@ class CandlCrewAdvancedTraining {
   }
 
   renderBadges() {
-    if (!this.badges.length) return '<span class="no-badges">No badges earned yet</span>'
+    if (!this.badges || !this.badges.length) return '<span class="no-badges">No badges earned yet</span>'
     
     return this.badges
       .filter(badge => badge.earned)
@@ -157,7 +157,7 @@ class CandlCrewAdvancedTraining {
   }
 
   renderManagerAnalytics() {
-    if (!this.analytics.totalEmployees) return ''
+    if (!this.analytics || !this.analytics.totalEmployees) return ''
     
     return `
       <div class="manager-analytics">
