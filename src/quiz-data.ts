@@ -1066,6 +1066,381 @@ export const quizData: QuizSection[] = [
         difficulty: 'easy'
       }
     ]
+  },
+
+  // ============================================
+  // BEVERAGE MASTERY CERTIFICATIONS
+  // Level 1 Sommelier Equivalent Programs
+  // ============================================
+
+  {
+    id: 'wine-sommelier-fundamentals',
+    title: 'Wine Sommelier - Fundamentals',
+    description: 'Essential wine knowledge: grape varieties, regions, and production methods',
+    passingScore: 85,
+    category: 'certification',
+    estimatedTime: 45,
+    icon: 'fas fa-wine-bottle',
+    badge: 'Wine Scholar',
+    prerequisites: ['general'],
+    questions: [
+      {
+        id: 'wine-fund-1',
+        type: 'multiple-choice',
+        question: 'What are the "Noble Grapes" of Bordeaux red wines?',
+        options: [
+          'Pinot Noir, Chardonnay, Riesling',
+          'Cabernet Sauvignon, Merlot, Cabernet Franc, Petit Verdot, Malbec',
+          'Tempranillo, Garnacha, Graciano',
+          'Sangiovese, Nebbiolo, Barbera'
+        ],
+        correctAnswer: 'Cabernet Sauvignon, Merlot, Cabernet Franc, Petit Verdot, Malbec',
+        explanation: 'These five grapes form the foundation of Bordeaux blends and are considered among the world\'s finest red wine grapes.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'wine-fund-2',
+        type: 'multiple-choice',
+        question: 'What does "terroir" mean in wine terms?',
+        options: [
+          'The winemaker\'s technique',
+          'The combination of soil, climate, topography, and tradition that gives wine its unique character',
+          'The age of the vineyard',
+          'The type of oak barrels used'
+        ],
+        correctAnswer: 'The combination of soil, climate, topography, and tradition that gives wine its unique character',
+        explanation: 'Terroir encompasses all environmental factors that influence grape growing and wine character.',
+        difficulty: 'easy'
+      },
+      {
+        id: 'wine-fund-3',
+        type: 'multiple-choice',
+        question: 'Which Portuguese wine region produces Vinho Verde?',
+        options: ['Douro', 'Minho', 'Alentejo', 'Dão'],
+        correctAnswer: 'Minho',
+        explanation: 'Minho region in northwest Portugal produces the light, refreshing Vinho Verde wines.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'wine-fund-4',
+        type: 'wine-pairing',
+        question: 'A customer orders our Bacalhau à Brás. Which Portuguese wine pairing would you recommend?',
+        wineData: {
+          dish: 'Bacalhau à Brás (Salt cod with eggs and potatoes)',
+          wineOptions: [
+            {
+              name: 'Vinho Verde',
+              type: 'white',
+              characteristics: ['Light', 'Crisp', 'Slightly effervescent'],
+              price: 28
+            },
+            {
+              name: 'Alvarinho',
+              type: 'white',
+              characteristics: ['Mineral', 'Citrusy', 'Full-bodied'],
+              price: 35
+            },
+            {
+              name: 'Douro Red',
+              type: 'red',
+              characteristics: ['Full-bodied', 'Rich', 'Tannic'],
+              price: 42
+            }
+          ],
+          correctPairing: 'Alvarinho',
+          reasoning: 'The mineral complexity complements salt cod while citrus cuts through the richness of eggs and potatoes',
+          pricePoint: 'mid-range'
+        },
+        correctAnswer: 'Alvarinho - mineral complexity complements salt cod, citrus cuts richness',
+        explanation: 'Portuguese salt cod dishes pair beautifully with Portuguese white wines that have mineral complexity.',
+        difficulty: 'medium'
+      }
+    ]
+  },
+
+  {
+    id: 'beer-cicerone-fundamentals',
+    title: 'Beer Cicerone - Fundamentals', 
+    description: 'Essential brewing knowledge: ingredients, process, and beer styles',
+    passingScore: 85,
+    category: 'certification',
+    estimatedTime: 40,
+    icon: 'fas fa-beer',
+    badge: 'Beer Expert',
+    questions: [
+      {
+        id: 'beer-fund-1',
+        type: 'multiple-choice',
+        question: 'What are the four essential ingredients in beer?',
+        options: [
+          'Water, malt, hops, yeast',
+          'Water, barley, sugar, alcohol',
+          'Malt, hops, corn, yeast',
+          'Water, grain, fruit, yeast'
+        ],
+        correctAnswer: 'Water, malt, hops, yeast',
+        explanation: 'These four ingredients form the foundation of all beer, following the German Reinheitsgebot purity law.',
+        difficulty: 'easy'
+      },
+      {
+        id: 'beer-fund-2',
+        type: 'multiple-choice',
+        question: 'What beer style pairs best with our spicy Portuguese chouriço?',
+        options: ['Light lager', 'IPA', 'Stout', 'Wheat beer'],
+        correctAnswer: 'IPA',
+        explanation: 'The hop bitterness and citrus notes in IPA complement and cool spicy, fatty meats.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'beer-fund-3',
+        type: 'true-false',
+        question: 'Sagres is our featured Portuguese lager at CandlCrew.',
+        correctAnswer: 'True',
+        explanation: 'Sagres represents authentic Portuguese brewing tradition and pairs well with our menu.',
+        difficulty: 'easy'
+      }
+    ]
+  },
+
+  {
+    id: 'whiskey-specialist',
+    title: 'Whiskey Specialist Certification',
+    description: 'Whiskey production methods, regional differences, and professional service',
+    passingScore: 85,
+    category: 'certification',
+    estimatedTime: 45,
+    icon: 'fas fa-glass-whiskey',
+    badge: 'Whiskey Connoisseur',
+    questions: [
+      {
+        id: 'whiskey-fund-1',
+        type: 'multiple-choice',
+        question: 'What makes Scotch whisky legally "Scotch"?',
+        options: [
+          'Any whisky made with Scottish water',
+          'Must be distilled in Scotland, aged minimum 3 years in oak, bottled at minimum 40% ABV',
+          'Must use only Scottish barley',
+          'Must be aged in Scotland for 12 years'
+        ],
+        correctAnswer: 'Must be distilled in Scotland, aged minimum 3 years in oak, bottled at minimum 40% ABV',
+        explanation: 'Strict legal requirements protect the integrity and quality of Scotch whisky worldwide.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'whiskey-fund-2',
+        type: 'multiple-choice',
+        question: 'Which Scotch region is known for peated, smoky whiskies?',
+        options: ['Highlands', 'Speyside', 'Islay', 'Lowlands'],
+        correctAnswer: 'Islay',
+        explanation: 'Islay\'s maritime climate and peat bogs create intensely smoky, maritime-influenced whiskies.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'whiskey-fund-3',
+        type: 'scenario',
+        question: 'A customer new to whiskey asks for a recommendation to pair with our Piri Piri BBQ Chicken. What do you suggest and why?',
+        correctAnswer: 'Recommend a smooth Highland Scotch or Irish whiskey, explain how the smokiness complements the BBQ flavors, offer neat service with water on the side',
+        explanation: 'Smoky whiskies complement BBQ flavors while remaining approachable for whiskey newcomers.',
+        difficulty: 'hard'
+      }
+    ]
+  },
+
+  {
+    id: 'tequila-specialist',
+    title: 'Tequila Specialist Certification',
+    description: 'Authentic tequila production, agave cultivation, and premium service',
+    passingScore: 85,
+    category: 'certification',
+    estimatedTime: 40,
+    icon: 'fas fa-pepper-hot',
+    badge: 'Tequila Master',
+    questions: [
+      {
+        id: 'tequila-fund-1',
+        type: 'multiple-choice',
+        question: 'What makes tequila legally "tequila"?',
+        options: [
+          'Any agave-based spirit',
+          'Must be made from Blue Weber agave in specific Mexican regions, minimum 51% agave',
+          'Must be made in Mexico with any agave variety',
+          'Must be 100% agave from anywhere in Mexico'
+        ],
+        correctAnswer: 'Must be made from Blue Weber agave in specific Mexican regions, minimum 51% agave',
+        explanation: 'Strict denominación de origen protects tequila\'s authenticity and quality standards.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'tequila-fund-2',
+        type: 'multiple-choice',
+        question: 'Which tequila category shows the purest agave flavor?',
+        options: ['Blanco/Silver', 'Reposado', 'Añejo', 'Extra Añejo'],
+        correctAnswer: 'Blanco/Silver',
+        explanation: 'Unaged Blanco tequila showcases the clean, pure essence of agave without oak influence.',
+        difficulty: 'easy'
+      },
+      {
+        id: 'tequila-fund-3',
+        type: 'fill-blank',
+        question: 'The heart of the agave plant used for tequila production is called the _______.',
+        correctAnswer: ['piña'],
+        explanation: 'The piña contains the concentrated sugars needed for fermentation and distillation.',
+        difficulty: 'easy'
+      }
+    ]
+  },
+
+  {
+    id: 'rum-specialist',
+    title: 'Rum Specialist Certification',
+    description: 'Rum production methods, regional styles, and cocktail expertise',
+    passingScore: 85,
+    category: 'certification',
+    estimatedTime: 40,
+    icon: 'fas fa-ship',
+    badge: 'Rum Captain',
+    questions: [
+      {
+        id: 'rum-fund-1',
+        type: 'multiple-choice',
+        question: 'What is rum made from?',
+        options: [
+          'Fermented grain mash',
+          'Sugarcane juice or molasses',
+          'Agave plant',
+          'Fermented fruit'
+        ],
+        correctAnswer: 'Sugarcane juice or molasses',
+        explanation: 'Rum\'s sweet, complex character comes from sugarcane-derived raw materials.',
+        difficulty: 'easy'
+      },
+      {
+        id: 'rum-fund-2',
+        type: 'multiple-choice',
+        question: 'What characterizes Jamaican rum style?',
+        options: [
+          'Light and clean',
+          'High ester content creating fruity, funky flavors',
+          'Heavily spiced',
+          'Always white/clear'
+        ],
+        correctAnswer: 'High ester content creating fruity, funky flavors',
+        explanation: 'Jamaican rums are known for their bold, distinctive character from extended fermentation.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'rum-fund-3',
+        type: 'multiple-choice',
+        question: 'What are the three ingredients in a classic Daiquiri?',
+        options: [
+          'Rum, lime juice, simple syrup',
+          'Rum, lime juice, sugar, mint',
+          'Rum, lemon juice, simple syrup',
+          'Rum, lime juice, triple sec'
+        ],
+        correctAnswer: 'Rum, lime juice, simple syrup',
+        explanation: 'The classic Daiquiri is elegantly simple, showcasing quality rum with balanced acidity and sweetness.',
+        difficulty: 'easy'
+      }
+    ]
+  },
+
+  {
+    id: 'beverage-service',
+    title: 'Professional Beverage Service',
+    description: 'Glassware selection, service protocols, and presentation standards',
+    passingScore: 90,
+    category: 'practical',
+    estimatedTime: 35,
+    icon: 'fas fa-concierge-bell',
+    badge: 'Service Master',
+    prerequisites: ['wine-sommelier-fundamentals', 'beer-cicerone-fundamentals'],
+    questions: [
+      {
+        id: 'serv-glass-1',
+        type: 'multiple-choice',
+        question: 'What is the proper glassware for serving premium aged whiskey neat?',
+        options: [
+          'Rocks glass',
+          'Glencairn glass or tulip-shaped nosing glass',
+          'Wine glass', 
+          'Shot glass'
+        ],
+        correctAnswer: 'Glencairn glass or tulip-shaped nosing glass',
+        explanation: 'The tulip shape concentrates aromas while allowing proper nose access for appreciation.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'serv-glass-2',
+        type: 'multiple-choice',
+        question: 'How full should you fill a wine glass for proper service?',
+        options: ['To the rim', 'Half full', 'One-third full', 'Two-thirds full'],
+        correctAnswer: 'One-third full',
+        explanation: 'This allows room for swirling and concentrates aromas in the bowl of the glass.',
+        difficulty: 'easy'
+      },
+      {
+        id: 'serv-glass-3',
+        type: 'multiple-choice',
+        question: 'What glassware should you use for Belgian wheat beer service?',
+        options: ['Pilsner glass', 'Pint glass', 'Wheat beer glass (tall, curved)', 'Wine glass'],
+        correctAnswer: 'Wheat beer glass (tall, curved)',
+        explanation: 'The tall, curved shape showcases the beer\'s hazy appearance and maintains the foamy head.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'serv-temp-1',
+        type: 'fill-blank',
+        question: 'The ideal serving temperature for Champagne and sparkling wines is ______°F to ______°F.',
+        correctAnswer: ['38', '45'],
+        explanation: 'This temperature range maintains bubbles while allowing flavors to express properly.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'serv-protocol-1',
+        type: 'scenario',
+        question: 'A customer orders a premium Añejo tequila. Describe the proper service protocol including glassware, presentation, and accompaniments.',
+        correctAnswer: 'Serve in snifter or wine glass, present bottle label first, pour neat at room temperature, offer lime and salt on the side (but explain sipping neat is preferred), provide small amount of water on side',
+        explanation: 'Premium tequila deserves the same respect as fine whiskey or cognac.',
+        difficulty: 'hard'
+      },
+      {
+        id: 'serv-protocol-2', 
+        type: 'multiple-choice',
+        question: 'When opening a bottle of wine at the table, what is the correct order of service?',
+        options: [
+          'Pour, present label, taste, approve',
+          'Present label, open, pour taste for host, get approval, serve table clockwise starting with women',
+          'Open, taste, pour, present',
+          'Taste first, then present to customer'
+        ],
+        correctAnswer: 'Present label, open, pour taste for host, get approval, serve table clockwise starting with women',
+        explanation: 'This traditional service ensures wine approval and respectful guest service.',
+        difficulty: 'hard'
+      },
+      {
+        id: 'serv-knowledge-1',
+        type: 'multiple-choice',
+        question: 'A customer complains their wine is "corked." What should you do?',
+        options: [
+          'Argue that the wine is fine',
+          'Apologize, remove the wine immediately, offer replacement or different selection',
+          'Ask them to drink it anyway',
+          'Charge them for the bottle'
+        ],
+        correctAnswer: 'Apologize, remove the wine immediately, offer replacement or different selection',
+        explanation: 'Cork taint is a legitimate defect. Customer satisfaction always comes first.',
+        difficulty: 'easy'
+      },
+      {
+        id: 'serv-upsell-1',
+        type: 'scenario',
+        question: 'A table orders our Paelha Portuguesa and asks for wine recommendations. How do you present options that create an upselling opportunity while ensuring satisfaction?',
+        correctAnswer: 'Present 3 options at different price points: budget Portuguese white, mid-range rosé for sharing, premium option. Explain how each enhances different elements of the paelha. Recommend mid-range as best value.',
+        explanation: 'Offering choices with clear reasoning builds trust and allows natural upselling.',
+        difficulty: 'hard'
+      }
+    ]
   }
 ]
 
@@ -1084,6 +1459,14 @@ export const gameConfig = {
     { id: 'sommelier-apprentice', name: 'Sommelier Apprentice', icon: 'fas fa-wine-bottle', requirements: ['wine-pairing'] },
     { id: 'menu-master', name: 'Menu Master', icon: 'fas fa-crown', requirements: ['bread-spreads', 'petiscos', 'sandwiches', 'salads', 'soups'] },
     { id: 'seafood-expert', name: 'Seafood Expert', icon: 'fas fa-anchor', requirements: ['seafood', 'large-format'] },
+    // NEW BEVERAGE SPECIALIST BADGES
+    { id: 'wine-scholar', name: 'Wine Scholar', icon: 'fas fa-wine-bottle', requirements: ['wine-sommelier-fundamentals'] },
+    { id: 'beer-expert', name: 'Beer Expert', icon: 'fas fa-beer', requirements: ['beer-cicerone-fundamentals'] },
+    { id: 'whiskey-connoisseur', name: 'Whiskey Connoisseur', icon: 'fas fa-glass-whiskey', requirements: ['whiskey-specialist'] },
+    { id: 'tequila-master', name: 'Tequila Master', icon: 'fas fa-pepper-hot', requirements: ['tequila-specialist'] },
+    { id: 'rum-captain', name: 'Rum Captain', icon: 'fas fa-ship', requirements: ['rum-specialist'] },
+    { id: 'service-master', name: 'Service Master', icon: 'fas fa-concierge-bell', requirements: ['beverage-service'] },
+    { id: 'beverage-virtuoso', name: 'Beverage Virtuoso', icon: 'fas fa-cocktail', requirements: ['wine-sommelier-fundamentals', 'beer-cicerone-fundamentals', 'whiskey-specialist', 'tequila-specialist', 'rum-specialist', 'beverage-service'] },
     { id: 'complete-training', name: 'Training Complete', icon: 'fas fa-graduation-cap', requirements: 'all' }
   ],
   
@@ -1094,7 +1477,9 @@ export const gameConfig = {
   },
   
   certificationRequirements: {
-    server: ['general', 'table-service', 'wine-pairing', 'food-safety'],
+    server: ['general', 'table-service', 'wine-pairing', 'food-safety', 'wine-sommelier-fundamentals', 'beer-cicerone-fundamentals'],
+    bartender: ['general', 'food-safety', 'wine-sommelier-fundamentals', 'beer-cicerone-fundamentals', 'whiskey-specialist', 'tequila-specialist', 'rum-specialist'],
+    sommelier: ['wine-sommelier-fundamentals', 'beer-cicerone-fundamentals', 'whiskey-specialist', 'tequila-specialist', 'rum-specialist', 'wine-pairing', 'food-safety'],
     kitchen: ['food-safety', 'general'],
     host: ['general', 'table-service'],
     manager: 'all'

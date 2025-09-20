@@ -2,6 +2,8 @@ import { Hono } from 'hono'
 import { handle } from 'hono/netlify'
 import { cors } from 'hono/cors'
 import { quizData, gameConfig, EmployeeProgress, RestaurantAnalytics } from '../../src/quiz-data.ts'
+import { beverageTrainingData } from '../../src/beverage-training-data.ts'
+import { candlCrewBeveragePairings, getPairingsByDish, getPairingsByCategory } from '../../src/beverage-menu-pairings.ts'
 
 const app = new Hono().basePath('/api')
 
@@ -110,23 +112,118 @@ app.get('/certification/:role', (c) => {
   })
 })
 
+// Beverage Training Endpoints
+app.get('/beverages', (c) => {
+  return c.json({
+    categories: beverageTrainingData.map(category => ({
+      id: category.id,
+      name: category.name,
+      description: category.description,
+      certificationLevel: category.certificationLevel,
+      estimatedStudyTime: category.estimatedStudyTime,
+      sectionCount: category.sections.length
+    }))
+  })
+})
+
+app.get('/beverage/:categoryId', (c) => {
+  const categoryId = c.req.param('categoryId')
+  const category = beverageTrainingData.find(cat => cat.id === categoryId)
+  
+  if (!category) {
+    return c.json({ error: 'Beverage category not found' }, 404)
+  }
+  
+  return c.json(category)
+})
+
+app.get('/beverage/:categoryId/section/:sectionId', (c) => {
+  const categoryId = c.req.param('categoryId')
+  const sectionId = c.req.param('sectionId')
+  
+  const category = beverageTrainingData.find(cat => cat.id === categoryId)
+  if (!category) {
+    return c.json({ error: 'Beverage category not found' }, 404)
+  }
+  
+  const section = category.sections.find(sec => sec.id === sectionId)
+  if (!section) {
+    return c.json({ error: 'Section not found' }, 404)
+  }
+  
+  return c.json(section)
+})
+
+app.get('/pairing-recommendations/:dishId', (c) => {
+  const dishId = c.req.param('dishId')
+  const pairing = getPairingsByDish(dishId)
+  
+  if (!pairing) {
+    return c.json({
+      error: 'Dish not found',
+      availableDishes: candlCrewBeveragePairings.map(p => p.dishId)
+    }, 404)
+  }
+  
+  return c.json(pairing)
+})
+
+app.get('/pairings/category/:category', (c) => {
+  const category = c.req.param('category')
+  const pairings = getPairingsByCategory(category)
+  
+  return c.json({
+    category,
+    pairings,
+    count: pairings.length
+  })
+})
+
+app.get('/pairings/all', (c) => {
+  return c.json({
+    pairings: candlCrewBeveragePairings,
+    categories: [...new Set(candlCrewBeveragePairings.map(p => p.category))],
+    totalPairings: candlCrewBeveragePairings.length
+  })
+})
+
 app.get('/health', (c) => {
+  const beverageQuestionCount = beverageTrainingData.reduce((acc, category) => 
+    acc + category.sections.reduce((secAcc, section) => secAcc + section.questions.length, 0), 0)
+  
   return c.json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
     sections: quizData.length,
     totalQuestions: quizData.reduce((acc, section) => acc + section.questions.length, 0),
+    beverageCategories: beverageTrainingData.length,
+    beverageQuestions: beverageQuestionCount,
+    menuPairings: candlCrewBeveragePairings.length,
     features: [
-      'Quiz System',
+      'Core Menu Training (11 sections)',
       'Table Service Simulator', 
-      'POS Training',
+      'POS Training System',
       'Food Safety Certification',
-      'Wine Pairing Guide',
-      'Progress Tracking',
-      'Badge System',
-      'Manager Analytics'
+      'Wine Sommelier Level 1',
+      'Beer Cicerone Level 1',
+      'Whiskey Specialist Program',
+      'Tequila Master Certification',
+      'Rum Captain Training',
+      'Professional Beverage Service',
+      'Comprehensive Menu Pairings',
+      'Progress Analytics',
+      'Badge & Achievement System',
+      'Role-Based Certifications',
+      'Manager Reporting Dashboard'
     ],
-    version: '2.0.0-advanced'
+    certificationLevels: [
+      'Server Certification',
+      'Bartender Master',
+      'Sommelier Professional',
+      'Kitchen Staff',
+      'Management Complete'
+    ],
+    version: '3.0.0-beverage-master'
   })
 })
 
