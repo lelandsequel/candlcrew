@@ -1,7 +1,34 @@
 // CandlCrew Advanced Beverage Training - Level 1 Sommelier Equivalent
 // Wine • Beer • Whiskey • Tequila • Rum Mastery Programs
 
-import { Question, QuizSection } from './quiz-data.ts'
+// Import the base interfaces directly to avoid circular dependency
+interface Question {
+  id: string
+  type: 'multiple-choice' | 'true-false' | 'fill-blank' | 'scenario' | 'table-service' | 'pos-training' | 'food-safety' | 'wine-pairing' | 'image-recognition'
+  question: string
+  options?: string[]
+  correctAnswer: string | string[]
+  explanation?: string
+  difficulty: 'easy' | 'medium' | 'hard'
+  imageUrl?: string
+  scenario?: any
+  posSimulation?: any
+  foodSafetyData?: any
+  wineData?: any
+}
+
+interface QuizSection {
+  id: string
+  title: string
+  description: string
+  questions: Question[]
+  passingScore: number
+  category: 'knowledge' | 'simulation' | 'certification' | 'practical'
+  prerequisites?: string[]
+  estimatedTime: number
+  badge?: string
+  icon: string
+}
 
 export interface BeverageCategory {
   id: string
