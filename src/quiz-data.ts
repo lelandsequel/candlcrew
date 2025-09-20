@@ -3,12 +3,70 @@
 
 export interface Question {
   id: string
-  type: 'multiple-choice' | 'true-false' | 'fill-blank' | 'scenario'
+  type: 'multiple-choice' | 'true-false' | 'fill-blank' | 'scenario' | 'table-service' | 'pos-training' | 'food-safety' | 'wine-pairing' | 'image-recognition'
   question: string
   options?: string[]
   correctAnswer: string | string[]
   explanation?: string
   difficulty: 'easy' | 'medium' | 'hard'
+  imageUrl?: string
+  scenario?: TableServiceScenario
+  posSimulation?: POSSimulation
+  foodSafetyData?: FoodSafetyData
+  wineData?: WinePairingData
+}
+
+export interface TableServiceScenario {
+  customerType: 'regular' | 'difficult' | 'allergic' | 'celebration' | 'business' | 'family'
+  situation: string
+  customerLines: string[]
+  correctResponses: string[]
+  upsellOpportunities?: string[]
+  points: number
+  timeLimit?: number
+}
+
+export interface POSSimulation {
+  orderItems: POSItem[]
+  modifiers: POSModifier[]
+  paymentMethod: string
+  expectedTotal: number
+  steps: string[]
+}
+
+export interface POSItem {
+  name: string
+  category: string
+  price: number
+  modifiable: boolean
+}
+
+export interface POSModifier {
+  name: string
+  price: number
+  category: string
+}
+
+export interface FoodSafetyData {
+  scenario: string
+  hazardType: 'temperature' | 'cross-contamination' | 'allergen' | 'hygiene' | 'storage'
+  correctProcedure: string[]
+  consequences: string
+}
+
+export interface WinePairingData {
+  dish: string
+  wineOptions: WineOption[]
+  correctPairing: string
+  reasoning: string
+  pricePoint: 'budget' | 'mid-range' | 'premium'
+}
+
+export interface WineOption {
+  name: string
+  type: 'red' | 'white' | 'rosé' | 'sparkling' | 'dessert'
+  characteristics: string[]
+  price: number
 }
 
 export interface QuizSection {
@@ -17,6 +75,11 @@ export interface QuizSection {
   description: string
   questions: Question[]
   passingScore: number
+  category: 'knowledge' | 'simulation' | 'certification' | 'practical'
+  prerequisites?: string[]
+  estimatedTime: number
+  badge?: string
+  icon: string
 }
 
 export const quizData: QuizSection[] = [
@@ -25,6 +88,9 @@ export const quizData: QuizSection[] = [
     title: 'Bread & Spreads',
     description: 'Learn about our signature bread offerings and accompaniments',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 8,
+    icon: 'fas fa-bread-slice',
     questions: [
       {
         id: 'bread-1',
@@ -80,6 +146,9 @@ export const quizData: QuizSection[] = [
     title: 'Petiscos (Small Plates)',
     description: 'Master our selection of Portuguese-inspired small plates and appetizers',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 10,
+    icon: 'fas fa-utensils',
     questions: [
       {
         id: 'petiscos-1',
@@ -135,6 +204,9 @@ export const quizData: QuizSection[] = [
     title: 'Sandwiches',
     description: 'Learn about our Portuguese-inspired sandwich offerings',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 8,
+    icon: 'fas fa-hamburger',
     questions: [
       {
         id: 'sandwich-1',
@@ -185,6 +257,9 @@ export const quizData: QuizSection[] = [
     title: 'Saladas (Salads)',
     description: 'Fresh salads with Portuguese and Mediterranean influences',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 7,
+    icon: 'fas fa-leaf',
     questions: [
       {
         id: 'salad-1',
@@ -231,6 +306,9 @@ export const quizData: QuizSection[] = [
     title: 'Sopa (Soups)',
     description: 'Traditional Portuguese soups and seafood stews',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 8,
+    icon: 'fas fa-bowl-food',
     questions: [
       {
         id: 'soup-1',
@@ -280,6 +358,9 @@ export const quizData: QuizSection[] = [
     title: 'Pizza',
     description: 'Wood-fired pizza offerings with Portuguese touches',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 6,
+    icon: 'fas fa-pizza-slice',
     questions: [
       {
         id: 'pizza-1',
@@ -327,6 +408,9 @@ export const quizData: QuizSection[] = [
     title: 'Vegetarian Entrees',
     description: 'Plant-based and vegetarian main course options',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 9,
+    icon: 'fas fa-seedling',
     questions: [
       {
         id: 'veg-1',
@@ -382,6 +466,9 @@ export const quizData: QuizSection[] = [
     title: 'Carne (Meat)',
     description: 'Traditional and modern Portuguese meat dishes',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 12,
+    icon: 'fas fa-drumstick-bite',
     questions: [
       {
         id: 'meat-1',
@@ -439,6 +526,9 @@ export const quizData: QuizSection[] = [
     title: 'Mar (Seafood)',
     description: 'Fresh seafood preparations with Portuguese flair',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 15,
+    icon: 'fas fa-fish',
     questions: [
       {
         id: 'seafood-1',
@@ -506,6 +596,9 @@ export const quizData: QuizSection[] = [
     title: 'For The Table (Large Format)',
     description: 'Shareable dishes designed for groups and special occasions',
     passingScore: 80,
+    category: 'knowledge',
+    estimatedTime: 10,
+    icon: 'fas fa-users',
     questions: [
       {
         id: 'large-1',
@@ -562,6 +655,9 @@ export const quizData: QuizSection[] = [
     title: 'General Restaurant Knowledge',
     description: 'Important service standards and restaurant policies',
     passingScore: 90,
+    category: 'knowledge',
+    estimatedTime: 12,
+    icon: 'fas fa-info-circle',
     questions: [
       {
         id: 'general-1',
@@ -624,6 +720,352 @@ export const quizData: QuizSection[] = [
         difficulty: 'easy'
       }
     ]
+  },
+  
+  // ============================================
+  // ADVANCED TRAINING MODULES
+  // ============================================
+  
+  {
+    id: 'table-service',
+    title: 'Table Service Simulator',
+    description: 'Interactive scenarios for taking orders, handling complaints, and upselling',
+    passingScore: 85,
+    category: 'simulation',
+    estimatedTime: 25,
+    icon: 'fas fa-concierge-bell',
+    badge: 'Service Excellence',
+    questions: [
+      {
+        id: 'service-1',
+        type: 'table-service',
+        question: 'A family of four walks in. Two adults, two children (ages 8 and 12). How do you approach and greet them?',
+        scenario: {
+          customerType: 'family',
+          situation: 'Family dinner with children, parents look tired from travel',
+          customerLines: [
+            'Hi, we don\'t have a reservation but we\'re hoping you can seat us.',
+            'The kids are pretty hungry, do you have anything they might like?',
+            'Is there a children\'s menu or smaller portions available?'
+          ],
+          correctResponses: [
+            'Welcome to CandlCrew! I\'d be happy to find you a table for four.',
+            'Absolutely! Let me show you some great options for the kids from our menu.',
+            'I can recommend some dishes that work well for children, and we can do smaller portions of most items.'
+          ],
+          upsellOpportunities: [
+            'Would you like to start with our Daily Bread for the table?',
+            'For the adults, our wine selection pairs beautifully with Portuguese cuisine.',
+            'We have a delicious dessert that kids absolutely love.'
+          ],
+          points: 15
+        },
+        correctAnswer: 'Greet warmly, acknowledge the children, offer family-friendly seating and menu options',
+        explanation: 'Families need welcoming service with child-appropriate options and patient explanations.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'service-2', 
+        type: 'table-service',
+        question: 'A business client complains their Francesinha is too saucy and demands a refund. How do you handle this?',
+        scenario: {
+          customerType: 'business',
+          situation: 'Lunch meeting, client is unhappy and creating a scene',
+          customerLines: [
+            'This sandwich is swimming in sauce! I can\'t eat this mess during a business lunch.',
+            'I want a full refund right now, this is completely unacceptable.',
+            'Don\'t you people know how to make food properly?'
+          ],
+          correctResponses: [
+            'I sincerely apologize for the inconvenience. Let me fix this right away.',
+            'The Francesinha is traditionally very saucy, but I can have the kitchen prepare a new one with sauce on the side.',
+            'I\'ll speak with my manager about the refund, but first let me get you something you\'ll enjoy.'
+          ],
+          upsellOpportunities: [],
+          points: 20
+        },
+        correctAnswer: 'Apologize sincerely, explain the dish tradition, offer alternatives, get manager if needed',
+        explanation: 'Business clients need quick, professional resolution. Never argue about food traditions when customer is upset.',
+        difficulty: 'hard'
+      },
+      {
+        id: 'service-3',
+        type: 'table-service', 
+        question: 'A couple is celebrating their anniversary. They seem unsure about wine pairings. Create the perfect upsell opportunity.',
+        scenario: {
+          customerType: 'celebration',
+          situation: 'Anniversary dinner, couple wants something special but seems price-conscious',
+          customerLines: [
+            'It\'s our 10th anniversary, we want something special but not too crazy expensive.',
+            'We\'re not really wine experts, what would you recommend?',
+            'Should we do an appetizer to share?'
+          ],
+          correctResponses: [
+            'Congratulations on your anniversary! I\'d love to help make this evening memorable.',
+            'Let me recommend some perfect wine pairings that offer great value.',
+            'I\'ll suggest a beautiful combination that will make your celebration extra special.'
+          ],
+          upsellOpportunities: [
+            'Start with our Petiscos Plate to share - perfect for celebrating',
+            'Our São Jorge cheese pairs wonderfully with a mid-range Portuguese wine',
+            'I can recommend a wine flight so you can try multiple pairings'
+          ],
+          points: 25
+        },
+        correctAnswer: 'Acknowledge celebration, recommend mid-range options, create memorable experience',
+        explanation: 'Celebrations are perfect upsell opportunities. Focus on value and creating memories, not just profit.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'service-4',
+        type: 'table-service',
+        question: 'A customer has a severe shellfish allergy and is asking about menu options. Walk them through safe choices.',
+        scenario: {
+          customerType: 'allergic',
+          situation: 'Severe food allergy, customer is nervous about cross-contamination',
+          customerLines: [
+            'I have a severe shellfish allergy - even cross-contamination can send me to the hospital.',
+            'Can you guarantee that items are prepared separately?',
+            'What would be the safest options for me?'
+          ],
+          correctResponses: [
+            'I take food allergies very seriously. Let me get detailed information about our prep procedures.',
+            'I\'ll speak directly with the kitchen about cross-contamination protocols for your order.',
+            'Let me identify the safest menu options and confirm preparation methods with our chef.'
+          ],
+          upsellOpportunities: [],
+          points: 30
+        },
+        correctAnswer: 'Take allergy seriously, consult with kitchen, identify safe options, no upselling',
+        explanation: 'Food allergies are life-threatening. Priority is safety, not sales. Always involve management and kitchen staff.',
+        difficulty: 'hard'
+      }
+    ]
+  },
+
+  {
+    id: 'pos-training',
+    title: 'POS System Training', 
+    description: 'Master the point-of-sale system with realistic order entry practice',
+    passingScore: 90,
+    category: 'simulation',
+    estimatedTime: 20,
+    icon: 'fas fa-cash-register',
+    badge: 'POS Expert',
+    questions: [
+      {
+        id: 'pos-1',
+        type: 'pos-training',
+        question: 'Enter this order: Prego sandwich, add fried egg, side of Batatas Bravas, Sagres beer',
+        posSimulation: {
+          orderItems: [
+            { name: 'Prego', category: 'Sandwiches', price: 16.00, modifiable: true },
+            { name: 'Batatas Bravas', category: 'Vegetarian', price: 8.00, modifiable: false },
+            { name: 'Sagres Beer', category: 'Beverages', price: 5.00, modifiable: false }
+          ],
+          modifiers: [
+            { name: 'Add Fried Egg', price: 2.00, category: 'Sandwich Add-ons' }
+          ],
+          paymentMethod: 'Credit Card',
+          expectedTotal: 31.00,
+          steps: [
+            'Navigate to Sandwiches category',
+            'Select Prego sandwich',
+            'Add modifier: Fried Egg (+$2)',
+            'Navigate to Vegetarian category', 
+            'Add Batatas Bravas',
+            'Navigate to Beverages',
+            'Add Sagres Beer',
+            'Review total: $31.00',
+            'Process payment'
+          ]
+        },
+        correctAnswer: '$31.00',
+        explanation: 'Prego ($16) + Fried Egg ($2) + Batatas Bravas ($8) + Sagres ($5) = $31.00',
+        difficulty: 'easy'
+      },
+      {
+        id: 'pos-2',
+        type: 'pos-training',
+        question: 'Process a split bill: Table ordered Paelha Portuguesa (Market Price: $45), two guests paying separately',
+        posSimulation: {
+          orderItems: [
+            { name: 'Paelha Portuguesa', category: 'Large Format', price: 45.00, modifiable: false }
+          ],
+          modifiers: [],
+          paymentMethod: 'Split Bill',
+          expectedTotal: 22.50,
+          steps: [
+            'Select split bill function',
+            'Divide Paelha Portuguesa by 2',
+            'Create separate checks',
+            'Each check: $22.50',
+            'Process first payment',
+            'Process second payment'
+          ]
+        },
+        correctAnswer: '$22.50 each',
+        explanation: 'Market price items must be split evenly unless specified otherwise. $45 ÷ 2 = $22.50 per person.',
+        difficulty: 'medium'
+      }
+    ]
+  },
+
+  {
+    id: 'food-safety',
+    title: 'Food Safety Certification',
+    description: 'Essential food handling, temperature control, and allergen awareness',
+    passingScore: 95,
+    category: 'certification',
+    estimatedTime: 30,
+    icon: 'fas fa-shield-alt',
+    badge: 'Food Safety Certified',
+    prerequisites: ['general'],
+    questions: [
+      {
+        id: 'safety-1',
+        type: 'food-safety',
+        question: 'You notice raw chicken juice has dripped onto the prep counter where vegetables are chopped. What is the correct procedure?',
+        foodSafetyData: {
+          scenario: 'Cross-contamination between raw poultry and vegetables',
+          hazardType: 'cross-contamination',
+          correctProcedure: [
+            'Stop all food preparation immediately',
+            'Remove any vegetables that may have been contaminated', 
+            'Clean and sanitize the entire prep surface',
+            'Wash hands thoroughly',
+            'Replace cutting boards and utensils',
+            'Resume prep with clean equipment'
+          ],
+          consequences: 'Foodborne illness, potential restaurant closure, legal liability'
+        },
+        correctAnswer: 'Stop prep, sanitize surface, replace contaminated items, wash hands, use clean equipment',
+        explanation: 'Cross-contamination from raw poultry is extremely dangerous and requires immediate action.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'safety-2',
+        type: 'food-safety',
+        question: 'What is the safe internal temperature for serving our Piri Piri BBQ Chicken?',
+        foodSafetyData: {
+          scenario: 'Temperature verification for poultry service',
+          hazardType: 'temperature',
+          correctProcedure: [
+            'Use calibrated thermometer',
+            'Insert into thickest part of meat',
+            'Avoid touching bone',
+            'Verify 165°F (74°C) internal temperature',
+            'If under temperature, return to kitchen'
+          ],
+          consequences: 'Salmonella, campylobacter, serious foodborne illness'
+        },
+        correctAnswer: '165°F (74°C)',
+        explanation: 'Poultry must reach 165°F internal temperature to kill harmful bacteria. No exceptions.',
+        difficulty: 'easy'
+      },
+      {
+        id: 'safety-3',
+        type: 'food-safety', 
+        question: 'A customer says they have celiac disease and asks about gluten-free options. What must you verify?',
+        foodSafetyData: {
+          scenario: 'Severe gluten allergy requiring strict protocols',
+          hazardType: 'allergen',
+          correctProcedure: [
+            'Inform kitchen about celiac customer',
+            'Verify all ingredients are gluten-free',
+            'Ensure separate prep surfaces are used',
+            'Check that no cross-contamination occurred',
+            'Use dedicated gluten-free utensils',
+            'Double-check with chef before serving'
+          ],
+          consequences: 'Severe intestinal damage, hospitalization, legal action'
+        },
+        correctAnswer: 'Dedicated prep area, verified gluten-free ingredients, separate utensils, kitchen notification',
+        explanation: 'Celiac disease is an autoimmune condition. Even trace gluten can cause severe health consequences.',
+        difficulty: 'hard'
+      }
+    ]
+  },
+
+  {
+    id: 'wine-pairing',
+    title: 'Wine & Beverage Pairing Guide',
+    description: 'Master wine and beverage pairings to enhance the dining experience',
+    passingScore: 80,
+    category: 'practical',
+    estimatedTime: 18,
+    icon: 'fas fa-wine-glass-alt',
+    badge: 'Sommelier Apprentice',
+    questions: [
+      {
+        id: 'wine-1',
+        type: 'wine-pairing',
+        question: 'A customer orders Bacalhau à Brás. What wine would you recommend and why?',
+        wineData: {
+          dish: 'Bacalhau à Brás',
+          wineOptions: [
+            {
+              name: 'Vinho Verde',
+              type: 'white',
+              characteristics: ['Light', 'Crisp', 'Slightly effervescent', 'Portuguese'],
+              price: 28
+            },
+            {
+              name: 'Douro Red',
+              type: 'red', 
+              characteristics: ['Full-bodied', 'Bold', 'Tannic', 'Portuguese'],
+              price: 45
+            },
+            {
+              name: 'Alvarinho',
+              type: 'white',
+              characteristics: ['Mineral', 'Citrusy', 'Food-friendly', 'Portuguese'],
+              price: 35
+            }
+          ],
+          correctPairing: 'Alvarinho',
+          reasoning: 'The mineral qualities complement the salt cod, while citrus cuts through the richness of eggs and potatoes',
+          pricePoint: 'mid-range'
+        },
+        correctAnswer: 'Alvarinho - mineral qualities complement salt cod, citrus cuts richness',
+        explanation: 'Portuguese salt cod dishes pair beautifully with Portuguese white wines that have mineral complexity.',
+        difficulty: 'medium'
+      },
+      {
+        id: 'wine-2',
+        type: 'wine-pairing',
+        question: 'Customers want to share the Petiscos Plate. Suggest a wine that complements multiple flavors.',
+        wineData: {
+          dish: 'Petiscos Plate (Mixed appetizers)',
+          wineOptions: [
+            {
+              name: 'Rosé de Provence',
+              type: 'rosé',
+              characteristics: ['Versatile', 'Fresh', 'Food-friendly', 'Balanced'],
+              price: 32
+            },
+            {
+              name: 'Pinot Grigio',
+              type: 'white',
+              characteristics: ['Light', 'Neutral', 'Clean', 'Simple'],
+              price: 26
+            },
+            {
+              name: 'Sangria',
+              type: 'red',
+              characteristics: ['Fruity', 'Sweet', 'Refreshing', 'Shareable'],
+              price: 24
+            }
+          ],
+          correctPairing: 'Rosé de Provence',
+          reasoning: 'Versatile enough to complement cheese, olives, and cured meats without overwhelming any single flavor',
+          pricePoint: 'mid-range'
+        },
+        correctAnswer: 'Rosé de Provence - versatile, complements multiple flavors without overwhelming',
+        explanation: 'Sharing plates need versatile wines that enhance rather than compete with diverse flavors.',
+        difficulty: 'easy'
+      }
+    ]
   }
 ]
 
@@ -633,4 +1075,59 @@ export const gameConfig = {
   maxAttempts: 3,
   pointsPerCorrect: 10,
   bonusTimePoints: 5,
+  
+  // Advanced features
+  badges: [
+    { id: 'service-excellence', name: 'Service Excellence', icon: 'fas fa-star', requirements: ['table-service'] },
+    { id: 'pos-expert', name: 'POS Expert', icon: 'fas fa-calculator', requirements: ['pos-training'] },
+    { id: 'food-safety-certified', name: 'Food Safety Certified', icon: 'fas fa-certificate', requirements: ['food-safety'] },
+    { id: 'sommelier-apprentice', name: 'Sommelier Apprentice', icon: 'fas fa-wine-bottle', requirements: ['wine-pairing'] },
+    { id: 'menu-master', name: 'Menu Master', icon: 'fas fa-crown', requirements: ['bread-spreads', 'petiscos', 'sandwiches', 'salads', 'soups'] },
+    { id: 'seafood-expert', name: 'Seafood Expert', icon: 'fas fa-anchor', requirements: ['seafood', 'large-format'] },
+    { id: 'complete-training', name: 'Training Complete', icon: 'fas fa-graduation-cap', requirements: 'all' }
+  ],
+  
+  leaderboard: {
+    enabled: true,
+    categories: ['overall', 'speed', 'accuracy', 'service-simulation'],
+    resetPeriod: 'monthly'
+  },
+  
+  certificationRequirements: {
+    server: ['general', 'table-service', 'wine-pairing', 'food-safety'],
+    kitchen: ['food-safety', 'general'],
+    host: ['general', 'table-service'],
+    manager: 'all'
+  },
+  
+  analytics: {
+    trackProgress: true,
+    identifyWeakAreas: true,
+    managerReporting: true,
+    exportData: true
+  }
+}
+
+// Employee tracking and progress data structures
+export interface EmployeeProgress {
+  id: string
+  name: string
+  role: 'server' | 'kitchen' | 'host' | 'manager'
+  startDate: string
+  completedSections: string[]
+  badges: string[]
+  scores: { [sectionId: string]: number }
+  certificationStatus: 'pending' | 'in-progress' | 'certified'
+  weakAreas: string[]
+  strengths: string[]
+  totalTrainingTime: number
+}
+
+export interface RestaurantAnalytics {
+  totalEmployees: number
+  averageCompletionRate: number
+  mostDifficultSections: string[]
+  topPerformers: string[]
+  certificationRates: { [role: string]: number }
+  monthlyProgress: { month: string; completions: number }[]
 }
